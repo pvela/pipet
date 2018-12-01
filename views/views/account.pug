@@ -1,0 +1,177 @@
+extends ../layout/default.pug
+
+block view
+  .animated.fadeIn
+  if (!account)
+    .row
+      .col-lg-6
+        .card
+          .card-header
+            i.fa.fa-align-justify
+            |  Account Details
+          .card-body
+            .col-lg-6
+              .card
+                .card-header
+                  i.fa.fa-align-justify
+                  |  Invalid Account Id
+  if (account)
+    .row
+      .col-lg-12
+        .card
+          .card-body
+            .col-lg-12
+              .card
+                .card-header
+                  i.fa.fa-align-justify
+                  h2 Account Details of 0x#{account._id}
+                .card-body
+                  table.table.table-responsive-sm.table-striped
+                    tbody
+                      tr
+                        td ID
+                        td 
+                          =account._id
+                      tr
+                        td Total Deposits
+                        td
+                          =account.totalDeposit
+                      tr
+                        td Merkle Proofs
+                        td 
+                          =account.merkle_proofs.length
+                  .col-md-12.mb-4
+                    ul.nav.nav-tabs(role='tablist')
+                      li.nav-item
+                        a.nav-link.active(data-toggle='tab', href='#transfers', role='tab', aria-controls='transfers')
+                          i.icon-calculator
+                          |  Transfers  
+                          span.badge.badge-pill.badge-danger 
+                            =account.transfers.length
+                      li.nav-item
+                        a.nav-link(data-toggle='tab', href='#deposits', role='tab', aria-controls='deposits')
+                          i.icon-basket-loaded
+                          |  Deposits  
+                          span.badge.badge-pill.badge-danger
+                            =account.deposits.length
+                      li.nav-item
+                        a.nav-link(data-toggle='tab', href='#wrequests', role='tab', aria-controls='wrequests')
+                          i.icon-pie-chart
+                          |  Withdrawl Requests  
+                          span.badge.badge-pill.badge-danger
+                            =account.withdrawal_requests.length
+                      li.nav-item
+                        a.nav-link(data-toggle='tab', href='#withdrawls', role='tab', aria-controls='withdrawls')
+                          i.icon-pie-chart
+                          |  Withdrawls  
+                          span.badge.badge-pill.badge-danger
+                            =account.withdrawals.length
+                      li.nav-item
+                        a.nav-link(data-toggle='tab', href='#comments', role='tab', aria-controls='comments')
+                          i.icon-pie-chart
+                          |  Comments
+                    .tab-content
+                      #transfers.tab-pane.active(role='tabpanel')
+                        table.table.table-responsive-sm.table-striped
+                          thead
+                            tr
+                              th.text-center ID
+                              th.text-center Recipient
+                              th Amount
+                              th.text-center Status
+                          tbody
+                            each val, index in account.transfers
+                              tr
+                                td.text-center
+                                  a(href="/transfer?id="+val.id)
+                                    =val.id
+                                td.text-center
+                                  if ('0x'+account._id === val.recipient)
+                                    | #{val.recipient} (self)
+                                  else
+                                    a(href="/account?id="+val.recipient)
+                                      =val.recipient
+                                td
+                                  div= val.amount
+                                td.text-center
+                                  =val.sent?"Success":"Failed"
+                                  .avatar
+                                    if (val.sent)
+                                      span.avatar-status.badge-success
+                                    else
+                                      span.avatar-status.badge-danger
+                      #deposits.tab-pane(role='tabpanel')
+                        table.table.table-responsive-sm.table-striped
+                          thead
+                            tr
+                              th.text-center Transaction ID
+                              th.text-center Amount
+                              th Block
+                              th.text-center Date
+                          tbody
+                            each val, index in account.deposits
+                              tr
+                                td.text-center
+                                    =val.txid
+                                td.text-center
+                                    =val.amount
+                                td
+                                  div= val.block
+                                td.text-center
+                                  | #{val.time} (#{moment(val.time).fromNow()})
+                      #withdrawls.tab-pane(role='tabpanel')
+                        table.table.table-responsive-sm.table-striped
+                          thead
+                            tr
+                              th.text-center Transaction ID
+                              th.text-center Amount
+                              th Block
+                              th.text-center Date
+                          tbody
+                            each val, index in account.withdrawals
+                              tr
+                                td.text-center
+                                    =val.txid
+                                td.text-center
+                                    =val.amount
+                                td
+                                  div= val.block
+                                td.text-center
+                                  | #{val.time} (#{moment(val.time).fromNow()})
+                      #wrequests.tab-pane(role='tabpanel')
+                        table.table.table-responsive-sm.table-striped
+                          thead
+                            tr
+                              th.text-center Transaction ID
+                              th.text-center Amount
+                              th Block
+                              th.text-center Date
+                          tbody
+                            each val, index in account.withdrawal_requests
+                              tr
+                                td.text-center
+                                    =val.txid
+                                td.text-center
+                                    =val.amount
+                                td
+                                  div= val.block
+                                td.text-center
+                                  | #{val.time} (#{moment(val.time).fromNow()})
+                      #comments.tab-pane(role='tabpanel')
+                        #disqus_thread
+                  // /.col
+  if (account)
+    script.
+      var disqus_config = function () {
+      this.page.url = "http://pipet.xyz/account?id=0x#{account._id}";
+      this.page.identifier = "pipet_accounts";
+      };
+      (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://ethernerve.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+      })();
+    noscript
+      | Please enable JavaScript to view the 
+      a(href='https://disqus.com/?ref_noscript') comments powered by Disqus.

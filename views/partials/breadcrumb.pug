@@ -1,0 +1,16 @@
+// Breadcrumb
+.row
+  br
+.row
+  .col-md-3
+  .col-md-6
+    form(action='/search', method='post')
+      .input-group
+        input#input1-group2.form-control(type='text', name='search', placeholder='Address')
+        span.input-group-append
+          button.btn.btn-primary(type='submit')
+            i.fa.fa-search
+            |  Search
+  .col-md-3
+.row
+  br

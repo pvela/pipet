@@ -1,0 +1,103 @@
+extends ../layout/default.pug
+
+block scripts
+
+block view
+  .animated.fadeIn
+    .row
+      .col-sm-6.col-md-3
+        .card.text-white.bg-success
+          .card-body
+            .text-value #{accountCount}
+            small.text-muted.text-uppercase.font-weight-bold Admissions
+      // /.col
+      .col-sm-6.col-md-3
+        .card.text-white.bg-info
+          .card-body
+            .text-value #{depositCount}
+            small.text-muted.text-uppercase.font-weight-bold Deposits
+      // /.col
+      .col-sm-6.col-md-3
+        .card.text-white.bg-warning
+          .card-body
+            .text-value #{transferCount}
+            small.text-muted.text-uppercase.font-weight-bold Transfers
+      // /.col
+      .col-sm-6.col-md-3
+        .card.text-white.bg-danger
+          .card-body
+            .text-value #{withdrawalCount}
+            small.text-muted.text-uppercase.font-weight-bold Withdrawals
+      // /.col
+    // /.row
+    .row
+      // /.col
+      .col-sm-6.col-md-4
+        .card.text-white.bg-info
+          .card-body
+            .text-value #{(totalDeposits>Math.pow(10,15)?(totalDeposits / Math.pow(10,18))+' ETH' : totalDeposits + ' WEI')}
+            small.text-muted.text-uppercase.font-weight-bold Amount Deposited
+      // /.col
+      .col-sm-6.col-md-4
+        .card.text-white.bg-warning
+          .card-body
+            .text-value #{(totalTransfers>Math.pow(10,15)?(totalTransfers / Math.pow(10,18))+' ETH' : totalTransfers + ' WEI')}
+            small.text-muted.text-uppercase.font-weight-bold Amount Transfered
+      // /.col
+      .col-sm-6.col-md-4
+        .card.text-white.bg-danger
+          .card-body
+            .text-value #{(totalWithdrawalas>Math.pow(10,15)?(totalWithdrawalas / Math.pow(10,18))+' ETH' : totalWithdrawalas + ' WEI')}
+            small.text-muted.text-uppercase.font-weight-bold Amount Withdrawan
+    .row
+      .col-md-6
+            br
+            h2 Latest Transfers
+            table.table.table-responsive-sm.table-hover.table-outline.mb-0
+              thead.thead-light
+                tr
+                  th.text-center ID
+                  th.text-center Address
+                  th Amount
+                  th.text-center Status
+              tbody
+                each val, index in latestTransfers
+                  tr
+                    td.text-center
+                      a(href="/transfer?id="+val.id)
+                        =val.id
+                    td.text-center
+                      .small.text-muted
+                        span Sender
+                      a(href="/account?id="+val.wallet)
+                        =val.wallet
+                      .small.text-muted
+                        span Reciever
+                      a(href="/account?id="+val.recipient)
+                        =val.recipient
+                    td
+                      div= val.amount>Math.pow(10,15)?(val.amount / Math.pow(10,18))+' ETH' : val.amount + ' WEI'
+                    td.text-center
+                      =val.sent?"Success":"Failed"
+                      .avatar
+                        if (val.sent)
+                          span.avatar-status.badge-success
+                        else
+                          span.avatar-status.badge-danger
+      .col-md-6
+            br
+            h2 Latest Accounts
+            table.table.table-responsive-sm.table-hover.table-outline.mb-0
+              thead.thead-light
+                tr
+                  th Address
+                  th.text-center Deposits
+              tbody
+                each latestAccount, index in latestAccounts
+                  tr
+                    td
+                      a(href="/account?id="+latestAccount._id)
+                        =latestAccount._id
+                    td.text-center
+                      =(latestAccount.totalDeposit>Math.pow(10,15)?(latestAccount.totalDeposit / Math.pow(10,18))+' ETH' : latestAccount.totalDeposit + ' WEI')
+    // /.row

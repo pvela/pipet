@@ -1,0 +1,79 @@
+extends ../layout/default.pug
+
+block view
+  .animated.fadeIn
+  if (!transfer)
+    .row
+      .col-lg-6
+        .card
+          .card-header
+            i.fa.fa-align-justify
+            |  Transfer Details
+          .card-body
+            .col-lg-6
+              .card
+                .card-header
+                  i.fa.fa-align-justify
+                  |  Invalid Transfer Id
+  if (transfer)
+    .row
+      .col-lg-12
+        .card
+          .card-body
+            .col-lg-12
+              .card
+                .card-header
+                  i.fa.fa-align-justify
+                  |  Transfer Details
+                .card-body
+                  table.table.table-responsive-sm.table-striped
+                    tbody
+                      tr
+                        td ID
+                        td= transfer.id
+                      tr
+                        td Amount
+                        td= transfer.amount
+                      tr
+                        td Wallet
+                        td
+                          a(href="/account?id="+transfer.wallet)
+                            =transfer.wallet
+                      tr
+                        td Wallet Trail Identifier
+                        td= transfer.wallet_trail_identifier
+                      tr
+                        td Recipient
+                        td
+                          a(href="/account?id="+transfer.recipient)
+                            =transfer.recipient
+                      tr
+                        td Recipient Trail Identifier
+                        td= transfer.recipient_trail_identifier
+                      tr
+                        td Processed
+                        td= transfer.processed?"Success":"Failed"
+                      tr
+                        td Sent
+                        td= transfer.sent? "Yes" : "No"
+              .card
+                .card-header
+                  i.fa.fa-align-justify
+                  |  Comments
+                .card-body
+                  #disqus_thread
+  if (transfer)
+    script.
+      var disqus_config = function () {
+      this.page.url = "http://pipet.xyz/transfer?id=#{transfer.id}";
+      this.page.identifier = "pipet_transfers";
+      };
+      (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://ethernerve.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+      })();
+    noscript
+      | Please enable JavaScript to view the 
+      a(href='https://disqus.com/?ref_noscript') comments powered by Disqus.
